@@ -3,6 +3,7 @@
 namespace Phpfor\OAuth2\Client\Provider;
 
 use Phpfor\OAuth2\Client\Provider\Exception\XiaoyunpuIdentityProviderException;
+use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -16,14 +17,15 @@ class Xiaoyunpu extends AbstractProvider
      *
      * @var string
      */
-    public $domain = 'https://www.xiaoyunpu.com';
+    // public $domain = 'https://www.xiaoyunpu.com';
+    public $domain = 'http://127.0.0.1:8080/xyp/open/public/index.php';
 
     /**
      * Api domain
      *
      * @var string
      */
-    public $apiDomain = 'https://www.xiaoyunpu.com';
+    public $apiDomain = 'http://www.xiaoyunpu.com';
 
     /**
      * Get authorization url to begin OAuth flow
@@ -32,7 +34,7 @@ class Xiaoyunpu extends AbstractProvider
      */
     public function getBaseAuthorizationUrl()
     {
-        return $this->domain.'/login/oauth/authorize';
+        return $this->domain.'/oauth2/authorize';
     }
 
     /**
@@ -44,7 +46,7 @@ class Xiaoyunpu extends AbstractProvider
      */
     public function getBaseAccessTokenUrl(array $params)
     {
-        return $this->domain.'/login/oauth/access_token';
+        return $this->domain.'/oauth2/access_token';
     }
 
     /**
@@ -59,7 +61,7 @@ class Xiaoyunpu extends AbstractProvider
         if ($this->domain === 'https://github.com') {
             return $this->apiDomain.'/user';
         }
-        return $this->domain.'/api/v3/user';
+        return $this->domain.'/api';
     }
 
     /**
@@ -88,9 +90,9 @@ class Xiaoyunpu extends AbstractProvider
     protected function checkResponse(ResponseInterface $response, $data)
     {
         if ($response->getStatusCode() >= 400) {
-            throw GithubIdentityProviderException::clientException($response, $data);
+            throw XiaoyunpuIdentityProviderException::clientException($response, $data);
         } elseif (isset($data['error'])) {
-            throw GithubIdentityProviderException::oauthException($response, $data);
+            throw XiaoyunpuIdentityProviderException::oauthException($response, $data);
         }
     }
 
@@ -103,7 +105,7 @@ class Xiaoyunpu extends AbstractProvider
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
-        $user = new GithubResourceOwner($response);
+        $user = new XiaoyunpuResourceOwner($response);
 
         return $user->setDomain($this->domain);
     }

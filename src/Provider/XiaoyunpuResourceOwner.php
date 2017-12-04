@@ -1,6 +1,7 @@
 <?php namespace Phpfor\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Tool\ArrayAccessorTrait;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
 class XiaoyunpuResourceOwner implements ResourceOwnerInterface
 {
@@ -37,7 +38,7 @@ class XiaoyunpuResourceOwner implements ResourceOwnerInterface
      */
     public function getId()
     {
-        return $this->getValueByKey($this->response, 'id');
+        return $this->getValueByKey($this->response, 'alias');
     }
 
     /**
